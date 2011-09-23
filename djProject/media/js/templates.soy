@@ -4,11 +4,11 @@
  * build task table header
  * @param project? the project
  * @param sprint? the sprint
+ 
  */
 {template .tasksTableHeader}
 <h2>Tasks</h2>
 <span>{if $project}Project: {$project.attributes.name}{/if} {if $sprint}Sprint: {$sprint.attributes.name}{/if}</span>
-
 <div id="projects-tasks-container" class="table">
 <div class="thg">
 	<div style="" class="tc">id</div>
@@ -33,15 +33,39 @@
 /**
  * Render Task
  * @param task the owner task.
+ * @param members the owner task.
  */
 {template .taskTemplate}
+
 <div class="tc id task-details"><a href="#">{$task.id}</a></div>
 <div class="tc description">
 	<div class="content">{$task.description}</div>
 	<div class="edit"><input class="description-input" type="text" value=""></div>
 </div>
-<div class="tc owner">{$task.owner ? $task.owner : '--'}</div>
-<div class="tc status">{$task.status}</div>
+
+<div class="tc owner">
+	<div class="content">{$task.owner ? $task.owner : '--'}</div>
+	<div class="edit">
+		<select class="owner-input">
+			<option value="">Select</option>
+			{foreach $m in $members }
+				<option value="{$m.user.resource_uri}">{$m.user.username}</option>
+			{/foreach}					
+		</select>
+	</div>
+</div>
+
+<div class="tc status">
+	<div class="content">{$task.status}</div>
+	<div class="edit">
+		<select class="status-input">		
+			<option value="N">Not Started</option>
+			<option value="C">Completed</option>
+			<option value="P">In Progress</option>
+			<option value="B">Blocked</option>
+		</select>
+	</div>
+</div>
 <div class="tc estimated">
 	<div class="content">{$task.estimated ? $task.estimated : '--'}</div>
 	<div class="edit"><input class="estimated-input" type="text" value=""></div>
@@ -60,14 +84,14 @@
  * @param sprint render sprint.
  */
 {template .sprintTemplate}
-<div class="sprint" data-sprint="{$sprint.id}" data-project="{$sprint.project}"><a href="#">{$sprint.name}</a></div>
+<div class="sprint" data-sprint="{$sprint.id}" data-project="{$sprint.project}"><a href="#">-- {$sprint.name}</a></div>
 {/template}
 
 /**
  * Render Project
- * @param project the name project.
+ * @param project the name project. 
  */
-{template .projectTemplate}
+{template .projectTemplate}  
 <div id="project-{$project.id}" class="project"><a href="#">{$project.name}</a></div>
 <ul class="project-sprints" data-uri="{$project.resource_uri}">
 <div class="backlog"><a href="#">backlog</a>
@@ -107,6 +131,20 @@
  * @param comment the comment.
  */
 {template .commentTemplate}
-<p class="comment">{$comment.comment}</p>
-<span class="username">by {$comment.username}</span>
+<p class="comment">{$comment.comment}
+	<span class="username">. by {$comment.user.username}</span>
+</p>
+{/template}
+
+
+/**
+ * Render Sprint Detail
+ * @param sprint
+ */
+{template .sprintDetailTemplate}
+<h2>Sprint Details</h2>
+<p>Name: {$sprint.name}</p>
+<p>Start: {$sprint.start_date}</p>
+<p>End: {$sprint.end_date}</p>
+<p>Tasks: {$sprint.tasks.length}</p>
 {/template}

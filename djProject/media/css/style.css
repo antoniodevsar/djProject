@@ -265,6 +265,7 @@ a:hover.link_create, #projects-list a:hover{
 
 #projects-container .project{
 	font-weight: bold;
+	font-size:14px;	
 }
 
 #projects-list a{
@@ -291,4 +292,9 @@ a:hover.link_create, #projects-list a:hover{
 
 .tc .content:hover {
 	background: #FFFF99;
+}
+
+
+.username{
+	color:red;
 }

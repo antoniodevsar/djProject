@@ -14,14 +14,21 @@ djProject.templates.tasksTableHeader = function(opt_data, opt_sb) {
 
 djProject.templates.taskTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="tc id task-details"><a href="#">', soy.$$escapeHtml(opt_data.task.id), '</a></div><div class="tc description"><div class="content">', soy.$$escapeHtml(opt_data.task.description), '</div><div class="edit"><input class="description-input" type="text" value=""></div></div><div class="tc owner">', soy.$$escapeHtml(opt_data.task.owner ? opt_data.task.owner : '--'), '</div><div class="tc status">', soy.$$escapeHtml(opt_data.task.status), '</div><div class="tc estimated"><div class="content">', soy.$$escapeHtml(opt_data.task.estimated ? opt_data.task.estimated : '--'), '</div><div class="edit"><input class="estimated-input" type="text" value=""></div></div><div class="tc remaining"><div class="content">', soy.$$escapeHtml(opt_data.task.remaining ? opt_data.task.remaining : '--'), '</div><div class="edit"><input class="remaining-input" type="text" value=""></div></div><div id="task-more-', soy.$$escapeHtml(opt_data.task.id), '" data-id="', soy.$$escapeHtml(opt_data.task.id), '" class="tc task-details"><a href="#">-></a></div>');
+  output.append('<div class="tc id task-details"><a href="#">', soy.$$escapeHtml(opt_data.task.id), '</a></div><div class="tc description"><div class="content">', soy.$$escapeHtml(opt_data.task.description), '</div><div class="edit"><input class="description-input" type="text" value=""></div></div><div class="tc owner"><div class="content">', soy.$$escapeHtml(opt_data.task.owner ? opt_data.task.owner : '--'), '</div><div class="edit"><select class="owner-input"><option value="">Select</option>');
+  var mList25 = opt_data.members;
+  var mListLen25 = mList25.length;
+  for (var mIndex25 = 0; mIndex25 < mListLen25; mIndex25++) {
+    var mData25 = mList25[mIndex25];
+    output.append('<option value="', soy.$$escapeHtml(mData25.user.resource_uri), '">', soy.$$escapeHtml(mData25.user.username), '</option>');
+  }
+  output.append('</select></div></div><div class="tc status"><div class="content">', soy.$$escapeHtml(opt_data.task.status), '</div><div class="edit"><select class="status-input"><option value="N">Not Started</option><option value="C">Completed</option><option value="P">In Progress</option><option value="B">Blocked</option></select></div></div><div class="tc estimated"><div class="content">', soy.$$escapeHtml(opt_data.task.estimated ? opt_data.task.estimated : '--'), '</div><div class="edit"><input class="estimated-input" type="text" value=""></div></div><div class="tc remaining"><div class="content">', soy.$$escapeHtml(opt_data.task.remaining ? opt_data.task.remaining : '--'), '</div><div class="edit"><input class="remaining-input" type="text" value=""></div></div><div id="task-more-', soy.$$escapeHtml(opt_data.task.id), '" data-id="', soy.$$escapeHtml(opt_data.task.id), '" class="tc task-details"><a href="#">-></a></div>');
   if (!opt_sb) return output.toString();
 };
 
 
 djProject.templates.sprintTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="sprint" data-sprint="', soy.$$escapeHtml(opt_data.sprint.id), '" data-project="', soy.$$escapeHtml(opt_data.sprint.project), '"><a href="#">', soy.$$escapeHtml(opt_data.sprint.name), '</a></div>');
+  output.append('<div class="sprint" data-sprint="', soy.$$escapeHtml(opt_data.sprint.id), '" data-project="', soy.$$escapeHtml(opt_data.sprint.project), '"><a href="#">-- ', soy.$$escapeHtml(opt_data.sprint.name), '</a></div>');
   if (!opt_sb) return output.toString();
 };
 
@@ -42,6 +49,13 @@ djProject.templates.taskDetailsTemplate = function(opt_data, opt_sb) {
 
 djProject.templates.commentTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<p class="comment">', soy.$$escapeHtml(opt_data.comment.comment), '</p><span class="username">by ', soy.$$escapeHtml(opt_data.comment.username), '</span>');
+  output.append('<p class="comment">', soy.$$escapeHtml(opt_data.comment.comment), '<span class="username">. by ', soy.$$escapeHtml(opt_data.comment.user.username), '</span></p>');
+  if (!opt_sb) return output.toString();
+};
+
+
+djProject.templates.sprintDetailTemplate = function(opt_data, opt_sb) {
+  var output = opt_sb || new soy.StringBuilder();
+  output.append('<h2>Sprint Details</h2><p>Name: ', soy.$$escapeHtml(opt_data.sprint.name), '</p><p>Start: ', soy.$$escapeHtml(opt_data.sprint.start_date), '</p><p>End: ', soy.$$escapeHtml(opt_data.sprint.end_date), '</p><p>Tasks: ', soy.$$escapeHtml(opt_data.sprint.tasks.length), '</p>');
   if (!opt_sb) return output.toString();
 };

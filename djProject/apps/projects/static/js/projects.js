@@ -16,10 +16,15 @@ $(function(){
 	     "click div.estimated .content" : "editEstimated",
 	     "keypress .estimated-input" : "updateEstimated",
 	     "click div.remaining .content" : "editRemaining",
-	     "keypress .remaining-input" : "updateRemaining"
+	     "keypress .remaining-input" : "updateRemaining",
+	     "click div.status .content" : "editStatus",
+	     "change div.status .status-input" : "updateStatus",
+	     "click div.owner .content" : "editOwner",
+	     "change div.owner .owner-input" : "updateOwner",
 	  },
 	  
 	  showDetails: function(e) {
+	  	  
           var view = new TaskDetailsView({model: this.model});
           $("#projects-side").html(view.render().el);
 	  },
@@ -51,9 +56,36 @@ $(function(){
 		  if (e.keyCode != 13) return;
 		  $(".estimated", this.el).removeClass("editing");
 		  value = $(".estimated input", $(this.el)).val();
-		  this.model.save({"estimated": value});
+		  this.model.save({"estimated": value});		  
+	  },
+	  
+	  editStatus: function(e) {	  	  
+		  $("div.status", this.el).addClass("editing");
+		  input = $(".status select", $(this.el));		  		  
+		  input.val(this.model.get('status')).attr('selected',true);		  		  
+		  input.focus();
+
 	  },
 
+	  updateStatus: function(e){
+	  	  $(".status", this.el).removeClass("editing");
+		  value = $(".status select", $(this.el)).val();		  
+		  this.model.save({"status": value});
+	  },
+	  
+	  editOwner: function(e) {	  	  
+		  $("div.owner", this.el).addClass("editing");
+		  input = $(".owner select", $(this.el));		  
+		  input.val(this.model.get('owner')).attr('selected',true);		  		  
+		  input.focus();		  
+	  },
+
+	  updateOwner: function(e){
+	  	  $(".owner", this.el).removeClass("editing");
+		  value = $(".owner select", $(this.el)).val();		  		  		  
+		  this.model.save({"owner": value});		  
+	  },
+	  
 	  editRemaining: function(e) {
 		  $("div.remaining", this.el).addClass("editing");
 		  input = $(".remaining input", $(this.el));
@@ -73,9 +105,16 @@ $(function(){
     	  if (!this.model) return;
     	  var task = this.model.toJSON();
     	  $(this.el).addClass('tr');
-    	  $(this.el).attr("id", "task-" + task.id);
-          $(this.el).html(djProject.templates.taskTemplate({task: task}));
+    	  $(this.el).attr("id", "task-" + task.id);    	  
+    	  members = Array();
+    	  
+    	  if (window.current_project){
+    	  	members = window.current_project.toJSON().members 
+    	  
+          $(this.el).html(djProject.templates.taskTemplate({task: task, members: members }));
+          }                    	
           return this;
+          
       }
     });
 
@@ -94,7 +133,19 @@ $(function(){
           return this;
         }
     });
-    
+
+	window.SprintDetailsView =  Backbone.View.extend({
+		tagName: 'div',        
+		initialize: function() {
+  	      this.model.bind('change', this.render, this);
+  	     },
+  	     render: function(){     	    
+  	     	console.log(this.model)  	     	
+  	     	$(this.el).html(djProject.templates.sprintDetailTemplate({sprint: this.model.toJSON()}));  	     	
+      	    return this;
+      	  }
+  	 });
+
     window.TaskDetailsView = Backbone.View.extend({
         tagName: 'div',
         className: 'task',
@@ -164,7 +215,15 @@ $(function(){
 	    },
 	    
 	    showSprint: function() {
+	    	this.model.fetch()	    	
+	    	window.current_project = new window.Project({'resource_uri':this.model.get('project_uri')}).fetch()	    		    		    	
 	    	window.tasks.filtered(null, this.model);
+	    	this.showDetails();
+	    },
+	    
+	    showDetails: function(){
+	    	v = new window.SprintDetailsView({model: this.model});
+	    	$("#projects-side").html(v.render().el);	    	
 	    },
 	    
         render: function() {
@@ -172,6 +231,7 @@ $(function(){
             return this;
         }
       });
+    
     
     window.ProjectView = Backbone.View.extend({
       tagName: 'li',
@@ -184,7 +244,11 @@ $(function(){
     	  this.sprints.bind('refresh', this.addSprints);
     	  this.sprints.view = this;
     	  this.model.sprints = this.sprints;
-    	  //this.model.sprint.bind('all', this.render, this);    	  
+    	  
+    	  
+    	  //this.model.sprint.bind('all', this.render, this);    	      
+    	  
+    	  
       },
       
       events: {
@@ -192,6 +256,10 @@ $(function(){
           "click div.backlog"   : "showBacklog"
 	  },
 
+	  //xxx: function(){
+//	  	this.each(function(e){console.log(e.toJSON())});
+//	  },
+	  
       addSprints: function(){
     	  $(this.view.el).filter('.project-sprints').html('');
     	  this.each(this.view.addSprint);
@@ -202,15 +270,17 @@ $(function(){
           $('ul[data-uri="'+sprint.get('project_uri')+'"]').prepend(view.render().el);
       },
       
-      showProject: function() {
+      showProject: function() {      		      		
 	    	window.tasks.filtered(this.model.get("id"));
+	    	//this.model.members.fetch()	 
+	    	   		    		    		    	
 	  },
 	  
 	  showBacklog: function() {
 	    	window.tasks.filtered(this.model.get("id"), 'backlog');
 	  },
       
-      render: function() {
+      render: function() {     	        	  
           $(this.el).html(djProject.templates.projectTemplate({project: this.model.toJSON()}));
           $(".sprint-create", this.el).colorbox({width:"400px", height:"300px", iframe:true});
           $(".add-member", this.el).colorbox({width:"300px", height:"240px", iframe:true});
@@ -238,7 +308,10 @@ $(function(){
           
           $("#project-create").colorbox({width:"300px", height:"200px", iframe:true});
           
+          window.my_tasks = window.tasks.my_tasks(current_user);
+          //console.log(window.my_tasks)
       },
+      
       
       events: {
           //"keypress #new-todo":  "createOnEnter",
@@ -248,15 +321,16 @@ $(function(){
        },
       
       addTasks: function(){
+      	  
     	  $('#projects-tasks').html(djProject.templates.tasksTableHeader({
     		  project: window.current_project,
-    		  sprint: window.current_sprint
-    	  }));
+    		  sprint: window.current_sprint,    		      		    		      		  
+    	  }));    	  
           window.tasks.each(window.app.addTask);
           window.app.input = $("#new-task");
       },
 
-      addTask: function(task){      	
+      addTask: function(task){      	  
           var view = new TaskView({model: task});
           this.$('#projects-tasks-container').append(view.render().el);
       },
