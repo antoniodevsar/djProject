@@ -10,16 +10,16 @@ from sprints.models import *
 from nest.utils import get_pusher
 
 STATUS_CHOICES = (
-    ('N','Not Started'),
-    ('C','Completed'),
+    ('N', 'Not Started'),
+    ('C', 'Completed'),
     ('P', 'In Progress'),
-    ('B','Blocked'),
+    ('B', 'Blocked'),
 )
 
 PRIORITY_CHOICES = (
-    ('1','High'),
-    ('2','Medium'),
-    ('3','Low')
+    ('1', 'High'),
+    ('2', 'Medium'),
+    ('3', 'Low')
     
 )
 
@@ -40,19 +40,19 @@ class Task(models.Model):
         return serializers.serialize("python", [self])[0]
 
 
-    def save(self, *args , ** kwargs ):
+    def save(self, *args, **kwargs):
         if self.id is None:
             message = 'task_created'
         else:
             message = 'task_updated'
             
-        super(Task, self).save(* args, ** kwargs)
+        super(Task, self).save(*args, **kwargs)
             
         try:
             p = get_pusher()
             for member in self.project.member_set.all():
                 p[member.user.username].trigger(message, {
-                    'task':  self.to_python()
+                    'task': self.to_python()
                 })
         except:
             logging.exception("error notifying")
@@ -77,8 +77,7 @@ class Comment(models.Model):
     comment = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
-
-    def save(self, *args , ** kwargs ):
+    def save(self, *args, **kwargs):
         if self.id is None:
             message = 'comment_created'
         else:
@@ -90,7 +89,7 @@ class Comment(models.Model):
             p = get_pusher()
             for member in self.task.project.member_set.all():
                 p[member.user.username].trigger(message, {
-                    'comment':  {'user': self.user.id, 'comment': self.comment, 'task': self.task.id}
+                    'comment': {'user': self.user.id, 'comment': self.comment, 'task': self.task.id}
                 })
         except:
             logging.exception("error notifying")

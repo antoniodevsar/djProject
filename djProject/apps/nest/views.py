@@ -6,10 +6,12 @@ from django.template.response import TemplateResponse
 
 from nest.forms import SignUpForm, UserForm
 
+
 def home(request):
     if request.user.is_authenticated():
         return redirect('projects_main')
     return TemplateResponse(request, 'index.html', {})
+
 
 def signup(request):
     form = SignUpForm()
@@ -21,7 +23,7 @@ def signup(request):
             return redirect('nest_home')
     
     data = {
-        'form':form,
+        'form': form,
     }
     return TemplateResponse(request, 'nest/signup.html', data)
 
@@ -33,14 +35,14 @@ def profile(request):
     #form = UserForm(request.POST or None, instance=user)
     form = UserForm(instance=user)
     if request.method == 'POST':
-        u = User.objects.get(username = request.user.username)
+        u = User.objects.get(username=request.user.username)
         form = UserForm(request.POST, instance=u)
         if form.is_valid():
             form.save()
             return redirect('nest_home')
     
     data = {
-        'form':form,
+        'form': form,
     }
     
     return TemplateResponse(request, 'nest/settings.html', data)

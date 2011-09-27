@@ -31,7 +31,7 @@ class Sprint(models.Model):
     def __unicode__(self):
         return u"%s" % self.name
 
-    def save(self, *args , ** kwargs ):
+    def save(self, *args, **kwargs):
         if self.id is None:
             message = 'sprint_created'
         else:
@@ -43,7 +43,7 @@ class Sprint(models.Model):
             p = get_pusher()
             for member in self.project.member_set.all():
                 p[member.user.username].trigger(message, {
-                    'sprint':  {'id': self.id, 'project': self.project.id}
+                    'sprint': {'id': self.id, 'project': self.project.id}
                 })
         except:
             logging.exception("error notifying")

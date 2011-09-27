@@ -1,5 +1,6 @@
 import pusher
 
+
 def get_pusher():
     pusher.app_id = '6417'
     pusher.key = '93d0509ce62dd993b05a'

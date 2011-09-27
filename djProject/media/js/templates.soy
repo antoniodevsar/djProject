@@ -10,16 +10,16 @@
 <h2>Tasks</h2>
 <span>{if $project}Project: {$project.attributes.name}{/if} {if $sprint}Sprint: {$sprint.attributes.name}{/if}</span>
 <div id="projects-tasks-container" class="table">
-<div class="thg">
-	<div style="" class="tc">id</div>
-	<div style="width: 40%" class="tc">description</div>
-	<div style="" class="tc">owner</div>
-	<div style="" class="tc">status</div>
-	<div style="" class="tc">est.</div>
-	/* <div style="" class="tc">spend</div> */
-	<div style="" class="tc">rem.</div>
-	<div style="" class="tc"></div>
-</div>
+	<div class="thg">
+		<div style="" class="tc">id</div>
+		<div style="width: 40%" class="tc">description</div>
+		<div style="" class="tc">owner</div>
+		<div style="" class="tc">status</div>
+		<div style="" class="tc">est.</div>
+		/* <div style="" class="tc">spend</div> */
+		<div style="" class="tc">rem.</div>
+		<div style="" class="tc"></div>
+	</div>
 </div>
 
 {if $project}
@@ -44,7 +44,7 @@
 </div>
 
 <div class="tc owner">
-	<div class="content">{$task.owner ? $task.owner : '--'}</div>
+	<div class="content">{$task.owner ? $task.owner.username : '--'}</div>
 	<div class="edit">
 		<select class="owner-input">
 			<option value="">Select</option>
@@ -109,7 +109,7 @@
 <h2>Task Details</h2>
 <ul id="task_details">
 <li>Id: {$task.id}</li>
-<li>Owner: {$task.owner ? $task.owner : '--'}</li>
+<li>Owner: {$task.owner ? $task.owner.username : '--'}</li>
 <li>Status: {$task.status}</li>
 <li>Estimated: {$task.estimated ? $task.estimated : '--'}</li>
 <li>Spend: {$task.spend ? $task.spend : '--'}</li>
@@ -147,4 +147,22 @@
 <p>Start: {$sprint.start_date}</p>
 <p>End: {$sprint.end_date}</p>
 <p>Tasks: {$sprint.tasks.length}</p>
+{/template}
+
+
+
+/**
+ * Render My Task  
+ */
+{template .myTasksTableHeader}
+<h2>My Tasks</h2>
+<div id="my-tasks-container"></div>
+{/template}
+
+/**
+ * Render My Task
+ * @param task
+ */
+{template .myTaskTemplate}
+	<p class="my-task-details">{$task.id}, {$task.description}, {$task.project.name}, {if $task.sprint}{$task.sprint.name} {else} backlog {/if}</p>	
 {/template}

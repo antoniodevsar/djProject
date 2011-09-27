@@ -298,3 +298,7 @@ a:hover.link_create, #projects-list a:hover{
 .username{
 	color:red;
 }
+
+.my-task-details{
+	cursor:pointer;	
+}

@@ -13,12 +13,26 @@ from sprints.models import Sprint
 import logging
 from django.http import Http404, HttpResponseBadRequest
 
+
+class ProjectAuthorization(Authorization):
+    
+    def is_authorized(self, request, object=None):
+        return request.user.is_authenticated()
+
+    # Optional but useful for advanced limiting, such as per user.
+    def apply_limits(self, request, object_list):
+                
+        if request and hasattr(request, 'user'):            
+            return object_list.filter(member__user=request.user)
+        return object_list.none()
+    
+    
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
         authorization = DjangoAuthorization()
-        excludes = ['email', 'password', 'is_staff', 'is_superuser']
+        excludes = ['email', 'password', 'is_staff', 'is_superuser','date_joined','last_login']
 
 
 class ProjectResource(ModelResource):
@@ -29,26 +43,28 @@ class ProjectResource(ModelResource):
         queryset = Project.objects.all()
         resource_name = 'project'
         authorization = Authorization()
-        
-    def get_object_list(self, request):
-        
-        projects = super(ProjectResource, self).get_object_list(request)
-        
-        if request:
-            return projects.filter(member__user=request.user)
-        else:
-            #internal query
-            return projects
+         
+#    def get_object_list(self, request):
+#        
+#        projects = super(ProjectResource, self).get_object_list(request)
+#        
+#        if request:
+#            return projects.filter(member__user=request.user)
+#        else:
+#            #internal query
+#            return projects
+
 
 class SprintResource(ModelResource):
     project_uri = fields.ToOneField(ProjectResource, 'project')
     tasks = fields.ToManyField("api.resources.TaskResource", 'task_set', related_name='sprint')
+        
     class Meta:
         queryset = Sprint.objects.all()
         resource_name = 'sprint'
         authorization = Authorization()
-        fields = ['id', 'project__id', 'name', 'start_date', 'end_date','tasks']
-
+        fields = ['id', 'project__id', 'name', 'start_date', 'end_date']        
+        
     def get_object_list(self, request):
         sprints = super(SprintResource, self).get_object_list(request)        
         if request:
@@ -69,29 +85,40 @@ class SprintResource(ModelResource):
         return orm_filters
 
 
+class TaskUserResource(ModelResource):
+
+    class Meta:
+        queryset = User.objects.all()
+        resource_name = 'user'
+        authorization = DjangoAuthorization()
+        fields = ['username','id']
+
+    
 class TaskResource(ModelResource):
-    project = fields.ForeignKey(ProjectResource, 'project')
-    sprint = fields.ForeignKey(SprintResource, 'sprint', null=True)
-    owner = fields.ForeignKey(UserResource, 'owner', null=True)
+    
+    project = fields.ToOneField(ProjectResource, 'project', full=True)
+    sprint = fields.ToOneField(SprintResource, 'sprint', null=True, full=True)
+    owner = fields.ToOneField(TaskUserResource, 'owner', null=True, full=True)
 
     class Meta:
         queryset = Task.objects.all()
         resource_name = 'task'
         authorization = Authorization()
+        
         filtering = {
             'project': ALL_WITH_RELATIONS,
             'sprint': ALL_WITH_RELATIONS,
             'description': ALL,
             'owner': ALL_WITH_RELATIONS,
-        }
-
-    def get_object_list(self, request):        
-        tasks = super(TaskResource, self).get_object_list(request)
-        if request:        
-            return tasks.filter(project__member__user=request.user)
-        else:
-            #internal query
-            return tasks
+        }                
+        
+#    def get_object_list(self, request):        
+#        tasks = super(TaskResource, self).get_object_list(request)        
+#        if request:        
+#            return tasks.filter(project__member__user=request.user)
+#        else:
+#            #internal query
+#            return tasks
 
     def build_filters(self, filters=None):
         if filters is None:
@@ -104,7 +131,6 @@ class TaskResource(ModelResource):
             sprint = None    
 
         orm_filters = super(TaskResource, self).build_filters(filters)
-        
 
         if "project" in filters:
             orm_filters["project__id"] = filters['project']
@@ -114,7 +140,6 @@ class TaskResource(ModelResource):
                 orm_filters["sprint__isnull"] = True
             else:
                 orm_filters["sprint__id"] = sprint
-        
         
         return orm_filters
 
@@ -144,8 +169,8 @@ class CommentResource(ModelResource):
 
 class MemberResource(ModelResource):
     
-    project = fields.ForeignKey(ProjectResource, 'project')
-    user = fields.ForeignKey(UserResource, 'user', full=True)
+    project = fields.ToOneField(ProjectResource, 'project')
+    user = fields.ToOneField(UserResource, 'user', full=True)
 
     class Meta:
         queryset = Member.objects.all()
@@ -155,7 +180,7 @@ class MemberResource(ModelResource):
             'project': ALL_WITH_RELATIONS,
             'user': ALL_WITH_RELATIONS,
         }
-        fields = ['user']
+        excluded = ['user__resource_uri']
 
 #    def get_object_list(self, request):
 #        

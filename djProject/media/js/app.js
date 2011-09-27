@@ -19,11 +19,9 @@ $(function(){
     window.Task = Backbone.Model.extend({
       url: function(){
          return this.get('resource_uri') || this.collection.url;
-      },     
-
-      
+      },      
     });
-
+	
     window.Tasks = Backbone.Collection.extend({
       url: TASK_API,
       model: window.Task,
@@ -31,9 +29,17 @@ $(function(){
           return data.objects;
       },      
       
-      my_tasks: function(user_id){
+      my_tasks: function(user_id, project_id, sprint_id){
       	  data = {};
       	  data['owner'] = user_id;
+      	  if (project_id){
+      	  	data['project'] = project_id;
+      	  }
+      	  
+      	  if (sprint_id){
+      	  	data['sprint'] = sprint_id;
+      	  }
+      	  
       	  this.url = TASK_API + "?" + $.param(data)    	  
           return this.fetch();
       }

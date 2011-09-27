@@ -1,5 +1,26 @@
 $(function(){
 
+	window.MyTaskView = Backbone.View.extend({
+	  tagName: 'div',
+      className: 'task',
+      
+        events: {	    
+	     "click p.my-task-details" : "showDetails",
+	  },
+      
+      
+      render: function(){      	
+      	$(this.el).html(djProject.templates.myTaskTemplate({task: this.model.toJSON() }));                            	
+         return this;      	
+      },
+      
+      showDetails: function(e){
+      	var view = new TaskDetailsView({model: this.model});
+          $("#projects-side").html(view.render().el);      	
+      },
+      
+	}),
+	
     window.TaskView = Backbone.View.extend({
       tagName: 'div',
       className: 'task',
@@ -21,6 +42,7 @@ $(function(){
 	     "change div.status .status-input" : "updateStatus",
 	     "click div.owner .content" : "editOwner",
 	     "change div.owner .owner-input" : "updateOwner",
+	     
 	  },
 	  
 	  showDetails: function(e) {
@@ -29,7 +51,7 @@ $(function(){
           $("#projects-side").html(view.render().el);
 	  },
 	  
-	  editDescription: function(e) {
+	  editDescription: function(e) {	  	  
 		  $("div.description", this.el).addClass("editing");
 		  input = $(".description input", $(this.el));
 		  input.val(this.model.get('description'));
@@ -40,8 +62,12 @@ $(function(){
 	  updateDescription: function(e) {
 		  if (e.keyCode != 13) return;
 		  $(".description", this.el).removeClass("editing");
-		  value = $(".description input", $(this.el)).val();
-		  this.model.save({"description": value});
+		  value = $(".description input", $(this.el)).val();		  
+		  this.model.save({"description": value,
+		  					'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
+		  					'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
+		  					'project':this.model.get('project')?this.model.get('project').resource_uri:null,
+		  				});
 	  },
 	  
 	  editEstimated: function(e) {
@@ -56,7 +82,10 @@ $(function(){
 		  if (e.keyCode != 13) return;
 		  $(".estimated", this.el).removeClass("editing");
 		  value = $(".estimated input", $(this.el)).val();
-		  this.model.save({"estimated": value});		  
+		  this.model.save({"estimated": value,'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
+		  'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
+		  'project':this.model.get('project')?this.model.get('project').resource_uri:null,});	  
+		  		  
 	  },
 	  
 	  editStatus: function(e) {	  	  
@@ -69,8 +98,11 @@ $(function(){
 
 	  updateStatus: function(e){
 	  	  $(".status", this.el).removeClass("editing");
-		  value = $(".status select", $(this.el)).val();		  
-		  this.model.save({"status": value});
+		  value = $(".status select", $(this.el)).val();		   
+		  this.model.save({"status": value,'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
+		  				'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
+		  				'project':this.model.get('project')?this.model.get('project').resource_uri:null,});
+		  //this.model.save({"status": value});
 	  },
 	  
 	  editOwner: function(e) {	  	  
@@ -83,7 +115,9 @@ $(function(){
 	  updateOwner: function(e){
 	  	  $(".owner", this.el).removeClass("editing");
 		  value = $(".owner select", $(this.el)).val();		  		  		  
-		  this.model.save({"owner": value});		  
+		  this.model.save({"owner": value,
+		  					'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
+		  					'project':this.model.get('project')?this.model.get('project').resource_uri:null,});		  
 	  },
 	  
 	  editRemaining: function(e) {
@@ -97,11 +131,14 @@ $(function(){
 	  updateRemaining: function(e) {
 		  if (e.keyCode != 13) return;
 		  $(".remaining", this.el).removeClass("editing");
-		  value = $(".remaining input", $(this.el)).val();
-		  this.model.save({"remaining": value});
+		  value = $(".remaining input", $(this.el)).val();		  
+		  this.model.save({"remaining": value,'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
+					  'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
+					  'project':this.model.get('project')?this.model.get('project').resource_uri:null,});
 	  },
 	  
       render: function(){
+      	  
     	  if (!this.model) return;
     	  var task = this.model.toJSON();
     	  $(this.el).addClass('tr');
@@ -112,7 +149,7 @@ $(function(){
     	  	members = window.current_project.toJSON().members 
     	  
           $(this.el).html(djProject.templates.taskTemplate({task: task, members: members }));
-          }                    	
+          }                              	
           return this;
           
       }
@@ -139,8 +176,7 @@ $(function(){
 		initialize: function() {
   	      this.model.bind('change', this.render, this);
   	     },
-  	     render: function(){     	    
-  	     	console.log(this.model)  	     	
+  	     render: function(){  	     	  	     	
   	     	$(this.el).html(djProject.templates.sprintDetailTemplate({sprint: this.model.toJSON()}));  	     	
       	    return this;
       	  }
@@ -218,7 +254,10 @@ $(function(){
 	    	this.model.fetch()	    	
 	    	window.current_project = new window.Project({'resource_uri':this.model.get('project_uri')}).fetch()	    		    		    	
 	    	window.tasks.filtered(null, this.model);
+	    	
 	    	this.showDetails();
+	    	
+	    	window.my_tasks.my_tasks(current_user, null, this.model.get("id"))
 	    },
 	    
 	    showDetails: function(){
@@ -255,10 +294,6 @@ $(function(){
     	  "click div.project"   : "showProject",
           "click div.backlog"   : "showBacklog"
 	  },
-
-	  //xxx: function(){
-//	  	this.each(function(e){console.log(e.toJSON())});
-//	  },
 	  
       addSprints: function(){
     	  $(this.view.el).filter('.project-sprints').html('');
@@ -272,6 +307,7 @@ $(function(){
       
       showProject: function() {      		      		
 	    	window.tasks.filtered(this.model.get("id"));
+	    	window.my_tasks.my_tasks(current_user, this.model.get("id"))
 	    	//this.model.members.fetch()	 
 	    	   		    		    		    	
 	  },
@@ -306,10 +342,19 @@ $(function(){
           window.current_project = null;
           window.current_sprint = null;
           
-          $("#project-create").colorbox({width:"300px", height:"200px", iframe:true});
+          $("#project-create").colorbox({width:"300px", height:"200px", iframe:true});          
           
-          window.my_tasks = window.tasks.my_tasks(current_user);
-          //console.log(window.my_tasks)
+          
+          window.my_tasks = new window.Tasks();
+          window.my_tasks.bind('refresh', this.addMyTasks, this);          
+          window.my_tasks.bind('all', this.render, this);                              
+          window.my_tasks.my_tasks(current_user);
+          
+          //window.my_tasks = window.tasks.my_tasks(current_user);
+          //window.my_tasks.bind('refresh', this.addMyTasks, this);
+          //window.my_tasks.bind('all', this.render, this);
+          //console.log(window.my_tasks)                    
+          
       },
       
       
@@ -329,10 +374,20 @@ $(function(){
           window.tasks.each(window.app.addTask);
           window.app.input = $("#new-task");
       },
-
+	
       addTask: function(task){      	  
           var view = new TaskView({model: task});
           this.$('#projects-tasks-container').append(view.render().el);
+      },
+      
+      addMyTasks: function(){      	  
+    	  $('#my-tasks').html(djProject.templates.myTasksTableHeader({}));		    	  
+          window.my_tasks.each(window.app.addMyTask);          
+      },
+      
+      addMyTask: function(my_task){      	
+      	var view = new MyTaskView({model: my_task});      	
+      	this.$('#my-tasks-container').append(view.render().el);
       },
       
       addProjects: function(){

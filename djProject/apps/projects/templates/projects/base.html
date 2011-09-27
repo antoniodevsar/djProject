@@ -65,6 +65,7 @@ channel.bind('task_created', function(data) {
 }); 
 channel.bind('task_updated', function(data) {	
 	window.tasks.fetch();
+	window.my_tasks.my_tasks(current_user);	
 	if (popSound) {
 		popSound.play();
 	}

@@ -9,17 +9,17 @@ class SignUpForm(forms.ModelForm):
     A form that creates a user, with no privileges, from the given username and password.
     """
     username = forms.RegexField(label=_("Username"), max_length=30, regex=r'^[\w.@+-]+$',
-        help_text = ("Required. 30 characters or fewer. Letters, digits and @/./+/-/ only."),
-        error_messages = {'invalid': ("This value may contain only letters, numbers and @/./+/-/ characters.")}
+        help_text=("Required. 30 characters or fewer. Letters, digits and @/./+/-/ only."),
+        error_messages={'invalid': ("This value may contain only letters, numbers and @/./+/-/ characters.")}
     )
     password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
     password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput,
-        help_text = _("Enter the same password as above, for verification.")
+        help_text=_("Enter the same password as above, for verification.")
     )
 
     class Meta:
         model = User
-        fields = ("username","email")
+        fields = ("username", "email")
 
     def clean_username(self):
         username = self.cleaned_data["username"]
@@ -54,10 +54,12 @@ class SignUpForm(forms.ModelForm):
 
 class LoginForm(forms.ModelForm):
     username = forms.CharField(label=_("Username"))
-    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput) 
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+     
     class Meta:
         model = User
-        fields = ('username','password')
+        fields = ('username', 'password')
+    
         
 class UserForm(forms.ModelForm):
     class Meta:

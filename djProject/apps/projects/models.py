@@ -1,3 +1,7 @@
+"""
+    Project Model
+"""
+
 import datetime 
 from dateutil.relativedelta import *
 import logging
@@ -22,6 +26,7 @@ USER_ROLES = (
     ('developer', _("Developer")),
     ('client', _("Client")),
 )
+
 
 class Project(models.Model):
     creator = models.ForeignKey(User)
@@ -54,13 +59,12 @@ class Project(models.Model):
             p = get_pusher()
             for member in self.member_set.all():
                 p[member.user.username].trigger("project_created", {
-                    'project':  {'id': self.id, 'name': self.name}
+                    'project': {'id': self.id, 'name': self.name}
                 })
         except:
             logging.exception("error notifying")
         
-        return self
-        
+        return self        
     
 
 class Member(models.Model):

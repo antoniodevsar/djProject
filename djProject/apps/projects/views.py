@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from projects.forms import ProjectForm, ProjectMemberForm  
 from projects.models import Project, Member
 
+
 @login_required
 def main(request):
     membership = Member.objects.filter(user=request.user)
@@ -29,7 +30,6 @@ def project_new(request):
         project.new(creator, name)
         return HttpResponse("Project Created!")
     return TemplateResponse(request, "projects/project_new.html", {'form': form}) 
-        
 
 
 @login_required
