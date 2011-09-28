@@ -107,7 +107,7 @@ $(function(){
 	      this.showDetails();
 	      $(".tc").removeClass("editing");
 		  $("div.status", this.el).addClass("editing");
-		  input = $(".status select", $(this.el));		  		  
+		  input = $(".status select", $(this.el));		  
 		  input.val(this.model.get('status')).attr('selected',true);		  		  
 		  input.focus();
 
@@ -146,7 +146,7 @@ $(function(){
 	      $(".tc").removeClass("editing");
 		  $("div.owner", this.el).addClass("editing");
 		  input = $(".owner select", $(this.el));		  
-		  input.val(this.model.get('owner')).attr('selected',true);		  		  
+		  $('option[value="'+this.model.get('owner').resource_uri+'"]',$(input)).attr('selected', 'selected');		  		  		  
 		  input.focus();		  
 	  },
 
