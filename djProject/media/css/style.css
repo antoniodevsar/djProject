@@ -51,12 +51,12 @@ a, a:visited{
 }
 
 .tr{
-    display:table-row;
+    display:table-row;    
 }
 
 .tc{
     display:table-cell;
-    padding: 5px 5px 5px 5px;
+    /*padding: 5px 5px 5px 5px;*/
 }
 
 .tc-vcenter {
@@ -233,7 +233,7 @@ div.tc.editing .content {
 }
 
 .estimated-input, .remaining-input {
-	width: 60%;
+	width: 20px;
 }
 
 .link_menu, .link_create{
@@ -301,4 +301,12 @@ a:hover.link_create, #projects-list a:hover{
 
 .my-task-details{
 	cursor:pointer;	
+}
+
+.active_row{
+	background: #EEE;
+}
+
+.task_row .tc{
+	padding:5px 5px;
 }

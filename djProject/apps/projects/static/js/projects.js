@@ -15,8 +15,8 @@ $(function(){
       },
       
       showDetails: function(e){
-      	var view = new TaskDetailsView({model: this.model});
-          $("#projects-side").html(view.render().el);      	
+      	//var view = new TaskDetailsView({model: this.model});
+//        $("#projects-side").html(view.render().el);      	
       },
       
 	}),
@@ -46,12 +46,18 @@ $(function(){
 	  },
 	  
 	  showDetails: function(e) {
-	  	  
+	  	  this.highlight();	  	  
           var view = new TaskDetailsView({model: this.model});
-          $("#projects-side").html(view.render().el);
+          $("#projects-side").html(view.render(this.model).el);
 	  },
 	  
-	  editDescription: function(e) {	  	  
+	  highlight: function(e){
+	  	$('div[classname="task"]').removeClass('active_row');
+	  	$(this.el).addClass('active_row');
+	  },
+	  
+	  editDescription: function(e) {
+	  	  this.showDetails();	  	  
 		  $("div.description", this.el).addClass("editing");
 		  input = $(".description input", $(this.el));
 		  input.val(this.model.get('description'));
@@ -67,10 +73,11 @@ $(function(){
 		  					'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
 		  					'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
 		  					'project':this.model.get('project')?this.model.get('project').resource_uri:null,
-		  				});
+		  				});		  
 	  },
 	  
 	  editEstimated: function(e) {
+	  	  this.showDetails();
 		  $("div.estimated", this.el).addClass("editing");
 		  input = $(".estimated input", $(this.el));
 		  input.val(this.model.get('estimated'));
@@ -89,6 +96,7 @@ $(function(){
 	  },
 	  
 	  editStatus: function(e) {	  	  
+	      this.showDetails();
 		  $("div.status", this.el).addClass("editing");
 		  input = $(".status select", $(this.el));		  		  
 		  input.val(this.model.get('status')).attr('selected',true);		  		  
@@ -105,7 +113,8 @@ $(function(){
 		  //this.model.save({"status": value});
 	  },
 	  
-	  editOwner: function(e) {	  	  
+	  editOwner: function(e) {
+	      this.showDetails();	  	  
 		  $("div.owner", this.el).addClass("editing");
 		  input = $(".owner select", $(this.el));		  
 		  input.val(this.model.get('owner')).attr('selected',true);		  		  
@@ -120,7 +129,8 @@ $(function(){
 		  					'project':this.model.get('project')?this.model.get('project').resource_uri:null,});		  
 	  },
 	  
-	  editRemaining: function(e) {
+	  editRemaining: function(e) { 
+	      this.showDetails();
 		  $("div.remaining", this.el).addClass("editing");
 		  input = $(".remaining input", $(this.el));
 		  input.val(this.model.get('remaining'));
@@ -142,6 +152,7 @@ $(function(){
     	  if (!this.model) return;
     	  var task = this.model.toJSON();
     	  $(this.el).addClass('tr');
+    	  $(this.el).addClass('task_row');
     	  $(this.el).attr("id", "task-" + task.id);    	  
     	  members = Array();
     	  
@@ -186,10 +197,9 @@ $(function(){
         tagName: 'div',
         className: 'task',
 
-        initialize: function() {
+        initialize: function() {        
   	      this.model.bind('change', this.render, this);
-  	      this.model.view = this;
-  	      
+  	      this.model.view = this;  	      
     	  this.comments = new window.Comments({task: this.model});
     	  this.comments.bind('refresh', this.addComments);
     	  this.comments.view = this;
@@ -213,15 +223,14 @@ $(function(){
 	          $('#comments-list').append(view.render().el);
 	    },
   	  	
-        render: function(){
-      	    var task = this.model;
-      	    $(this.el).addClass('tr');
+        render: function(task){        	
+      	    $(this.el).addClass('tr');      	    
       	    $(this.el).addClass('task');
-      	    $(this.el).attr("id", "task-" + task.get('id'));
+      	    $(this.el).attr("id", "task-" + task.get('id') );      	    
             $(this.el).html(djProject.templates.taskDetailsTemplate({task: task.toJSON()}));
             //get comments 
-            this.comments.filtered(task);
-            return this;
+            task.view.comments.filtered(task);
+            return task.view;
         },      
         
         createOnEnter: function(e){

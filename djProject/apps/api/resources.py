@@ -32,7 +32,7 @@ class UserResource(ModelResource):
         queryset = User.objects.all()
         resource_name = 'user'
         authorization = DjangoAuthorization()
-        excludes = ['email', 'password', 'is_staff', 'is_superuser','date_joined','last_login']
+        excludes = ['email', 'password', 'is_staff', 'is_superuser', 'date_joined', 'last_login']
 
 
 class ProjectResource(ModelResource):
@@ -91,7 +91,7 @@ class TaskUserResource(ModelResource):
         queryset = User.objects.all()
         resource_name = 'user'
         authorization = DjangoAuthorization()
-        fields = ['username','id']
+        fields = ['username', 'id']
 
     
 class TaskResource(ModelResource):

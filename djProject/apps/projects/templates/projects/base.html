@@ -65,7 +65,7 @@ channel.bind('task_created', function(data) {
 }); 
 channel.bind('task_updated', function(data) {	
 	window.tasks.fetch();
-	window.my_tasks.my_tasks(current_user);	
+	window.my_tasks.my_tasks(current_user, current_project.id, current_sprint.id);	
 	if (popSound) {
 		popSound.play();
 	}
