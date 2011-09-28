@@ -39,14 +39,17 @@ class Task(models.Model):
     def to_python(self):
         return serializers.serialize("python", [self])[0]
 
-
     def save(self, *args, **kwargs):
         if self.id is None:
             message = 'task_created'
         else:
             message = 'task_updated'
-            
-        super(Task, self).save(*args, **kwargs)
+        
+        #set status to complete when remaining is 0
+        if self.remaining and int(self.remaining) == 0:            
+            self.status = 'C'
+                    
+        super(Task, self).save(*args, **kwargs)    
             
         try:
             p = get_pusher()
