@@ -20,11 +20,11 @@ class ProjectAuthorization(Authorization):
         return request.user.is_authenticated()
 
     # Optional but useful for advanced limiting, such as per user.
-    def apply_limits(self, request, object_list):
-                
+    def apply_limits(self, request, object_list):        
         if request and hasattr(request, 'user'):            
             return object_list.filter(member__user=request.user)
-        return object_list.none()
+        return object_list
+        #return object_list.none()
     
     
 class UserResource(ModelResource):
@@ -42,7 +42,7 @@ class ProjectResource(ModelResource):
     class Meta:
         queryset = Project.objects.all()
         resource_name = 'project'
-        authorization = Authorization()
+        authorization = ProjectAuthorization()
          
 #    def get_object_list(self, request):
 #        
