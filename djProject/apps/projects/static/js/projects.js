@@ -61,9 +61,11 @@ $(function(){
 	  },
 	  
 	  editDescription: function(e) {
-	  	  this.showDetails();	  	  
+	  	  this.showDetails();
+	  	  $(".tc").removeClass("editing");
+	  	  	  	  
 		  $("div.description", this.el).addClass("editing");
-		  input = $(".description input", $(this.el));
+		  input = $(".description textarea", $(this.el));
 		  input.val(this.model.get('description'));
 		  input.focus();
 
@@ -72,7 +74,7 @@ $(function(){
 	  updateDescription: function(e) {
 		  if (e.keyCode != 13) return;
 		  $(".description", this.el).removeClass("editing");
-		  value = $(".description input", $(this.el)).val();		  
+		  value = $(".description textarea", $(this.el)).val();		  
 		  this.model.save({"description": value,
 		  					'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
 		  					'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
@@ -82,6 +84,7 @@ $(function(){
 	  
 	  editEstimated: function(e) {
 	  	  this.showDetails();
+	  	  $(".tc").removeClass("editing");
 		  $("div.estimated", this.el).addClass("editing");
 		  input = $(".estimated input", $(this.el));
 		  input.val(this.model.get('estimated'));
@@ -102,6 +105,7 @@ $(function(){
 	  
 	  editStatus: function(e) {	  	  
 	      this.showDetails();
+	      $(".tc").removeClass("editing");
 		  $("div.status", this.el).addClass("editing");
 		  input = $(".status select", $(this.el));		  		  
 		  input.val(this.model.get('status')).attr('selected',true);		  		  
@@ -120,6 +124,7 @@ $(function(){
 	  
 	  editPriority: function(e) {  	  	  	
 	      this.showDetails();
+	      $(".tc").removeClass("editing");
 		  $("div.priority", this.el).addClass("editing");
 		  input = $(".priority select", $(this.el));		  		  
 		  input.val(this.model.get('priority')).attr('selected',true);		  		  
@@ -138,6 +143,7 @@ $(function(){
 	  
 	  editOwner: function(e) {
 	      this.showDetails();	  	  
+	      $(".tc").removeClass("editing");
 		  $("div.owner", this.el).addClass("editing");
 		  input = $(".owner select", $(this.el));		  
 		  input.val(this.model.get('owner')).attr('selected',true);		  		  
@@ -154,6 +160,7 @@ $(function(){
 	  
 	  editRemaining: function(e) { 
 	      this.showDetails();
+	      $(".tc").removeClass("editing");
 		  $("div.remaining", this.el).addClass("editing");
 		  input = $(".remaining input", $(this.el));
 		  input.val(this.model.get('remaining'));

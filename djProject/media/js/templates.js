@@ -14,7 +14,7 @@ djProject.templates.tasksTableHeader = function(opt_data, opt_sb) {
 
 djProject.templates.taskTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="tc id task-details"><a href="#">', soy.$$escapeHtml(opt_data.task.id), '</a></div><div class="tc description"><div class="content">', soy.$$escapeHtml(opt_data.task.description), '</div><div class="edit"><input class="description-input" type="text" value=""></div></div><div class="tc owner"><div class="content">', soy.$$escapeHtml(opt_data.task.owner ? opt_data.task.owner.username : '--'), '</div><div class="edit"><select class="owner-input"><option value="">Select</option>');
+  output.append('<div class="tc id task-details"><a href="#">', soy.$$escapeHtml(opt_data.task.id), '</a></div><div class="tc description"><div class="content">', soy.$$escapeHtml(opt_data.task.description), '</div><div class="edit"><textarea class="description-input" type="text" value=""></textarea></div></div><div class="tc owner"><div class="content">', soy.$$escapeHtml(opt_data.task.owner ? opt_data.task.owner.username : '--'), '</div><div class="edit"><select class="owner-input"><option value="">Select</option>');
   var mList25 = opt_data.members;
   var mListLen25 = mList25.length;
   for (var mIndex25 = 0; mIndex25 < mListLen25; mIndex25++) {

@@ -310,3 +310,12 @@ a:hover.link_create, #projects-list a:hover{
 .task_row .tc{
 	padding:5px 5px;
 }
+
+
+.description > .content{
+	width:180px;
+}
+
+.description-input{
+	width:180px;
+}
