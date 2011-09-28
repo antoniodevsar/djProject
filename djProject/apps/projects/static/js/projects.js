@@ -430,12 +430,13 @@ $(function(){
       },
       
       addProjects: function(){
+      	  $('#projects-container').html("");
           window.projects.each(window.app.addProject);
       },
 
       addProject: function(project){      	
           var view = new ProjectView({model: project});
-          this.$('#projects-container').prepend(view.render().el);
+          $('#projects-container').prepend(view.render().el);
       },
       newAttributes: function() {
     	  

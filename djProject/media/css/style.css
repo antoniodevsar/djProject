@@ -248,6 +248,10 @@ a:hover.link_create, #projects-list a:hover{
 	background: #efefef;
 }
 
+#projects-container{
+	height:600px;
+	overflow-y:auto;
+}
 #projects-container > li{
 	text-decoration: none;
 	color: #777;
