@@ -42,6 +42,10 @@ $(function(){
 	     "change div.status .status-input" : "updateStatus",
 	     "click div.owner .content" : "editOwner",
 	     "change div.owner .owner-input" : "updateOwner",
+	     "click div.priority .content" : "editPriority",
+	     "change div.priority .priority-input" : "updatePriority",
+	     
+	     
 	     
 	  },
 	  
@@ -95,6 +99,7 @@ $(function(){
 		  		  
 	  },
 	  
+	  
 	  editStatus: function(e) {	  	  
 	      this.showDetails();
 		  $("div.status", this.el).addClass("editing");
@@ -108,6 +113,24 @@ $(function(){
 	  	  $(".status", this.el).removeClass("editing");
 		  value = $(".status select", $(this.el)).val();		   
 		  this.model.save({"status": value,'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
+		  				'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
+		  				'project':this.model.get('project')?this.model.get('project').resource_uri:null,});
+		  //this.model.save({"status": value});
+	  },
+	  
+	  editPriority: function(e) {  	  	  	
+	      this.showDetails();
+		  $("div.priority", this.el).addClass("editing");
+		  input = $(".priority select", $(this.el));		  		  
+		  input.val(this.model.get('priority')).attr('selected',true);		  		  
+		  input.focus();
+
+	  },
+	  
+	  updatePriority: function(e){
+	  	  $(".priority", this.el).removeClass("editing");
+		  value = $(".priority select", $(this.el)).val();		   
+		  this.model.save({"priority": value,'owner':this.model.get('owner')?this.model.get('owner').resource_uri:null,
 		  				'sprint':this.model.get('sprint')?this.model.get('sprint').resource_uri:null,
 		  				'project':this.model.get('project')?this.model.get('project').resource_uri:null,});
 		  //this.model.save({"status": value});
