@@ -1,18 +1,15 @@
 """
-    Project Model
+    Project App model
 """
 
 import datetime 
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 import logging
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.utils.translation import ugettext as _
 
-
-import pusher
 from nest.utils import get_pusher
 
 PROJECT_STATUS = (
@@ -29,6 +26,7 @@ USER_ROLES = (
 
 
 class Project(models.Model):
+
     creator = models.ForeignKey(User)
     name = models.CharField(max_length=32)
     since = models.DateTimeField(auto_now_add=True)
@@ -56,9 +54,9 @@ class Project(models.Model):
         sprint.new(self, 'Sprint', start_date, end_date)
             
         try:
-            p = get_pusher()
+            pus = get_pusher()
             for member in self.member_set.all():
-                p[member.user.username].trigger("project_created", {
+                pus[member.user.username].trigger("project_created", {
                     'project': {'id': self.id, 'name': self.name}
                 })
         except:
@@ -77,6 +75,3 @@ class Member(models.Model):
         self.project = project
         self.role = role
         self.save()
-        
-        
-        

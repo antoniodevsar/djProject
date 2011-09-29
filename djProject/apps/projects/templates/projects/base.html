@@ -7,7 +7,7 @@
 
 {% block main %}
 
-<div class="yui3-u-1-6" id="projects-column">
+<div class="yui3-u-1-6 panel" id="projects-column">
 	<div id="projects-list" class="column">
 		<h2>{% trans "Projects"%}</h2>
 	  	<ul>
@@ -19,20 +19,20 @@
    		</p>
 	</div>
 </div>
-<div class="yui3-u-1-3">
-	<div id="projects-tasks" class="column">
-	</div>
-</div>
-<div class="yui3-u-1-6">
-	<div id="projects-side" class="column">
-		<h2>{% trans "Side"%}</h2>
-	</div>
-</div>
-<div class="yui3-u-1-4">
+<div class="yui3-u-1-4 panel" id="my_tasks-column">
 	<div id="my-tasks" class="column">
 		<h2>{% trans "My Tasks"%}</h2>
 	</div>
 </div>
+<div class="yui3-u-1-3 panel" id="tasks-column">
+	<div id="projects-tasks" class="column"></div>
+</div>
+<div class="yui3-u-1-6 panel" id="side-column">
+	<div id="projects-side" class="column">
+		<h2>{% trans "Side"%}</h2>
+	</div>
+</div>
+
 
 
 {% endblock %}

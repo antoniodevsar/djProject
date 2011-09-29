@@ -1,3 +1,6 @@
+"""
+    Sprint App model
+"""
 
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -13,6 +16,9 @@ SPRINT_STATUS = (
 
 
 class Sprint(models.Model):
+    """
+    """
+
     project = models.ForeignKey(Project)
     name = models.CharField(max_length=32)
     start_date = models.DateField()
@@ -40,9 +46,9 @@ class Sprint(models.Model):
         super(Sprint, self).save(* args, ** kwargs)
             
         try:
-            p = get_pusher()
+            pus = get_pusher()
             for member in self.project.member_set.all():
-                p[member.user.username].trigger(message, {
+                pus[member.user.username].trigger(message, {
                     'sprint': {'id': self.id, 'project': self.project.id}
                 })
         except:
@@ -54,6 +60,3 @@ class TimeLog(models.Model):
     start_time = models.DateTimeField()
     hours = models.DecimalField(decimal_places=2, max_digits=4)
     description = models.TextField()
-
-    
-    

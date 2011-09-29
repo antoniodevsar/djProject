@@ -40,12 +40,19 @@
 	        {% else %}
 	 		<a href="{% url nest_login %}">login</a> | <a href="{% url nest_signup %}">sign up</a>
 	 		{% endif %}
-	 		</div>
+	 		</div>	 		
         </div>
+                
     </div>
 	{% endblock %}
 	</header>
-	{% block main_outer %}
+	{% block main_outer %}	
+	<div id="top_buttons">
+		<a href="#" class="small awesome green" id="projects">Projects</a>	
+		<a href="#" class="small awesome green" id="my_tasks">My Tasks</a>
+		<a href="#" class="small awesome green" id="tasks">Tasks</a>		
+		<a href="#" class="small awesome green" id="side">Details</a>
+	</div>	
 	<div id="main" role="main" class="yui3-g">
 	{% block main %}
 	{% endblock %}

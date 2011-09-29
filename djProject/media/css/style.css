@@ -169,7 +169,7 @@ a, a:visited{
 	border: solid 1px #DDD;
 	border-radius: 5px 5px 0 0;
 	min-height: 500px;
-	margin: 6px 2px;
+	margin: 6px 2px;	
 }
 
 .column h2{
@@ -322,4 +322,54 @@ a:hover.link_create, #projects-list a:hover{
 
 .description-input{
 	width:180px;
+}
+
+#top_buttons{
+	padding:2px 4px;
+}
+
+.my-task-row > .task_id{	
+	display:inline-block;
+	width:10px;
+	height:10px;
+	border:solid 1px #EEE;
+}
+
+.my-task-row > .task_description{
+	color:black;	
+}
+
+.my-task-row{
+	background-color:white;
+	border:solid 1px #EEE;
+	padding:2px;
+}
+
+
+.my-task-row > span{
+	padding:0px 3px;	
+}
+
+.my-task-row > .C{
+	background-color:green;
+}
+
+.my-task-row > .P{
+	background-color:orange;
+}
+
+.my-task-row > .N{
+	background-color:red;
+}
+
+.my-task-row > .B{
+	background-color:black;
+}
+
+.task_comments{
+	background:url(../img/comment.png) no-repeat;	
+	width:15px;
+	height:15px;
+	font-size:10px;
+	display:inline-block;	
 }

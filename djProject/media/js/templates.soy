@@ -119,6 +119,8 @@
  */
 {template .taskDetailsTemplate}
 <h2>Task Details</h2>
+
+/*
 <ul id="task_details">
 <li>Id: {$task.id}</li>
 <li>Owner: {$task.owner ? $task.owner.username : '--'}</li>
@@ -128,13 +130,22 @@
 <li>Remaining: {$task.remaining ? $task.remaining : '--'}</li>
 <li>Priority: {$task.priority ? $task.priority : '--'}</li>
 </ul>
+
+*/
 <h2>Description</h2>
 <p class="description">{$task.description}</p>
+
+
 <h2>Comments</h2>
 <ul id="comments-list">no comments</ul>
 <div id="create-comment">
 	<input id="new-comment" placeholder="Something to say?" type="text">
 </div>
+<ul id="log-list">no comments</ul>
+
+<h2>History</h2>
+
+
 {/template}
 
 
@@ -176,5 +187,12 @@
  * @param task
  */
 {template .myTaskTemplate}
-	<p class="my-task-details">{$task.id}, {$task.description}, {$task.project.name}, {if $task.sprint}{$task.sprint.name} {else} backlog {/if}</p>	
+	<p class="my-task-row">
+		<a href="#" class="task_id {$task.status}"></a>
+		<span class="task_description">{$task.description}</span>
+		<span class="task_priority">{$task.priority}</span>
+	    {if $task.comments.length }
+			<span class="task_comments" title="{$task.comments.length}"></span>
+		{/if}
+	</p>	
 {/template}

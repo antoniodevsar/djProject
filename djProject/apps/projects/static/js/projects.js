@@ -5,7 +5,7 @@ $(function(){
       className: 'task',
       
         events: {	    
-	     "click p.my-task-details" : "showDetails",
+	     "click p > .task_id" : "showDetails",
 	  },
       
       
@@ -14,9 +14,9 @@ $(function(){
          return this;      	
       },
       
-      showDetails: function(e){
-      	//var view = new TaskDetailsView({model: this.model});
-//        $("#projects-side").html(view.render().el);      	
+      showDetails: function(e){      	
+      	var view = new TaskDetailsView({model: this.model});
+        $("#projects-side").html(view.render(this.model).el);      	
       },
       
 	}),
@@ -30,7 +30,7 @@ $(function(){
 	      this.model.view = this;
 	  },
 
-      events: {
+      events: {      	 
 	     "click div.task-details"   : "showDetails",
 	     "click div.description .content" : "editDescription",
 	     "keypress .description-input" : "updateDescription",
@@ -43,10 +43,7 @@ $(function(){
 	     "click div.owner .content" : "editOwner",
 	     "change div.owner .owner-input" : "updateOwner",
 	     "click div.priority .content" : "editPriority",
-	     "change div.priority .priority-input" : "updatePriority",
-	     
-	     
-	     
+	     "change div.priority .priority-input" : "updatePriority",	     
 	  },
 	  
 	  showDetails: function(e) {
@@ -129,7 +126,6 @@ $(function(){
 		  input = $(".priority select", $(this.el));		  		  
 		  input.val(this.model.get('priority')).attr('selected',true);		  		  
 		  input.focus();
-
 	  },
 	  
 	  updatePriority: function(e){
@@ -145,8 +141,10 @@ $(function(){
 	      this.showDetails();	  	  
 	      $(".tc").removeClass("editing");
 		  $("div.owner", this.el).addClass("editing");
-		  input = $(".owner select", $(this.el));		  
-		  $('option[value="'+this.model.get('owner').resource_uri+'"]',$(input)).attr('selected', 'selected');		  		  		  
+		  input = $(".owner select", $(this.el));
+		  if (this.model.get('owner')){
+		  	$('option[value="'+this.model.get('owner').resource_uri+'"]',$(input)).attr('selected', 'selected');
+		  }		  		  		  
 		  input.focus();		  
 	  },
 
@@ -389,19 +387,32 @@ $(function(){
           window.my_tasks.bind('all', this.render, this);                              
           window.my_tasks.my_tasks(current_user);
           
+          
           //window.my_tasks = window.tasks.my_tasks(current_user);
           //window.my_tasks.bind('refresh', this.addMyTasks, this);
           //window.my_tasks.bind('all', this.render, this);
-          //console.log(window.my_tasks)                    
+          //console.log(window.my_tasks)
           
+          this.resize_panels();
+          
+          //TODO: event;                    
+          $("#top_buttons > a").click(function(event){          	
+          	id = $(event.target).attr('id')          	
+          	$('#'+id+'-column').toggle();
+          	$(event.target).toggleClass('green')
+          	window.app.resize_panels();
+          	
+          })
       },
       
       
       events: {
           //"keypress #new-todo":  "createOnEnter",
-          //"keyup #new-todo":     "showTooltip",
+          //"keyup #new-todo":     "showTooltip",                   
           "click .project-link a": "projectTasks",
-          "keypress #new-task":  "createOnEnter"
+          "keypress #new-task":  "createOnEnter",
+          
+          
        },
       
       addTasks: function(){
@@ -455,8 +466,20 @@ $(function(){
     	  if (e.keyCode != 13) return;
           window.tasks.create(this.newAttributes());
           this.input.val('');
-      }
+      },
 
+	  resize_panels : function(e){	  	
+	  	c = 0;	  	
+	   	$('.panel').each(function(e,x){   		
+	   		if ($(x).is(':visible')){
+	   			c+=1
+	   		}
+	   	})	   	
+	    w = 100/c;
+	   	$('.panel').css('width',w+'%');	   	
+	   	h = parseInt($(document).height()) - 80;
+	   	$('.column').css('height',h+'px');	   	
+	   }
     });
       
     window.app = new App();

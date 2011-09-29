@@ -98,8 +98,9 @@ class TaskResource(ModelResource):
     
     project = fields.ToOneField(ProjectResource, 'project', full=True)
     sprint = fields.ToOneField(SprintResource, 'sprint', null=True, full=True)
-    owner = fields.ToOneField(TaskUserResource, 'owner', null=True, full=True)
-
+    owner = fields.ToOneField(TaskUserResource, 'owner', null=True, full=True)    
+    comments = fields.ToManyField("api.resources.CommentResource", 'comment_set', related_name='task')
+    
     class Meta:
         queryset = Task.objects.all()
         resource_name = 'task'

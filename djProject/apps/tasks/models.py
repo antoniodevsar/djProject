@@ -1,12 +1,15 @@
-import pusher
+"""
+    Task app model
+"""
+
 import logging
 
 from django.db import models
 from django.core import serializers
 from django.contrib.auth.models import User
 
-
-from sprints.models import *
+from projects.models import Project 
+from sprints.models import Sprint
 from nest.utils import get_pusher
 
 STATUS_CHOICES = (
@@ -20,11 +23,11 @@ PRIORITY_CHOICES = (
     ('1', 'High'),
     ('2', 'Medium'),
     ('3', 'Low')
-    
 )
 
 
 class Task(models.Model):
+    
     project = models.ForeignKey(Project)
     parent = models.ForeignKey('self', null=True, blank=True)
     sprint = models.ForeignKey(Sprint, null=True, blank=True)
@@ -75,6 +78,7 @@ class Log(models.Model):
     description = models.CharField(max_length=255)
     
 class Comment(models.Model):
+    
     task = models.ForeignKey(Task)
     user = models.ForeignKey(User)
     comment = models.TextField()

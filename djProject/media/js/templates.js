@@ -42,7 +42,7 @@ djProject.templates.projectTemplate = function(opt_data, opt_sb) {
 
 djProject.templates.taskDetailsTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<h2>Task Details</h2><ul id="task_details"><li>Id: ', soy.$$escapeHtml(opt_data.task.id), '</li><li>Owner: ', soy.$$escapeHtml(opt_data.task.owner ? opt_data.task.owner.username : '--'), '</li><li>Status: ', soy.$$escapeHtml(opt_data.task.status), '</li><li>Estimated: ', soy.$$escapeHtml(opt_data.task.estimated ? opt_data.task.estimated : '--'), '</li><li>Spend: ', soy.$$escapeHtml(opt_data.task.spend ? opt_data.task.spend : '--'), '</li><li>Remaining: ', soy.$$escapeHtml(opt_data.task.remaining ? opt_data.task.remaining : '--'), '</li><li>Priority: ', soy.$$escapeHtml(opt_data.task.priority ? opt_data.task.priority : '--'), '</li></ul><h2>Description</h2><p class="description">', soy.$$escapeHtml(opt_data.task.description), '</p><h2>Comments</h2><ul id="comments-list">no comments</ul><div id="create-comment"><input id="new-comment" placeholder="Something to say?" type="text"></div>');
+  output.append('<h2>Task Details</h2><h2>Description</h2><p class="description">', soy.$$escapeHtml(opt_data.task.description), '</p><h2>Comments</h2><ul id="comments-list">no comments</ul><div id="create-comment"><input id="new-comment" placeholder="Something to say?" type="text"></div><ul id="log-list">no comments</ul><h2>History</h2>');
   if (!opt_sb) return output.toString();
 };
 
@@ -70,6 +70,6 @@ djProject.templates.myTasksTableHeader = function(opt_data, opt_sb) {
 
 djProject.templates.myTaskTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('\t<p class="my-task-details">', soy.$$escapeHtml(opt_data.task.id), ', ', soy.$$escapeHtml(opt_data.task.description), ', ', soy.$$escapeHtml(opt_data.task.project.name), ', ', (opt_data.task.sprint) ? soy.$$escapeHtml(opt_data.task.sprint.name) + ' ' : ' backlog ', '</p>');
+  output.append('\t<p class="my-task-row"><a href="#" class="task_id ', soy.$$escapeHtml(opt_data.task.status), '"></a><span class="task_description">', soy.$$escapeHtml(opt_data.task.description), '</span><span class="task_priority">', soy.$$escapeHtml(opt_data.task.priority), '</span>', (opt_data.task.comments.length) ? '<span class="task_comments" title="' + soy.$$escapeHtml(opt_data.task.comments.length) + '"></span>' : '', '</p>');
   if (!opt_sb) return output.toString();
 };
