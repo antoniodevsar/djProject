@@ -5,7 +5,7 @@ $(function(){
       className: 'task',
       
         events: {	    
-	     "click p > .task_id" : "showDetails",
+	     "click p":"showDetails",
 	  },
       
       
@@ -14,8 +14,10 @@ $(function(){
          return this;      	
       },
       
-      showDetails: function(e){      	
-      	var view = new TaskDetailsView({model: this.model});
+      showDetails: function(e){ 
+      	$('.my-task-row').removeClass('active_row');
+      	$('.my-task-row',$(this.el)).addClass('active_row');     	      	
+      	var view = new TaskDetailsView({model: this.model});      	      	      	
         $("#projects-side").html(view.render(this.model).el);      	
       },
       

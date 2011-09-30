@@ -308,7 +308,7 @@ a:hover.link_create, #projects-list a:hover{
 }
 
 .active_row{
-	background: #EEE;
+	background: #EEE !important;
 }
 
 .task_row .tc{
@@ -335,6 +335,7 @@ a:hover.link_create, #projects-list a:hover{
 	border:solid 1px #EEE;
 }
 
+
 .my-task-row > .task_description{
 	color:black;	
 }
@@ -343,6 +344,7 @@ a:hover.link_create, #projects-list a:hover{
 	background-color:white;
 	border:solid 1px #EEE;
 	padding:2px;
+	cursor:pointer;
 }
 
 
