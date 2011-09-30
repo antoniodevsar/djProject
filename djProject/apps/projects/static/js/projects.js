@@ -344,7 +344,7 @@ $(function(){
           $('ul[data-uri="'+sprint.get('project_uri')+'"]').prepend(view.render().el);
       },
       
-      showProject: function() {      		      		
+      showProject: function() {      		      			      		
 	    	window.tasks.filtered(this.model.get("id"));
 	    	window.my_tasks.my_tasks(current_user, this.model.get("id"))
 	    	//this.model.members.fetch()	 

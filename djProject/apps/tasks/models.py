@@ -39,7 +39,6 @@ class Task(models.Model):
     remaining = models.DecimalField(decimal_places=2, max_digits=8, null=True, blank=True)
     priority = models.CharField(max_length=2, choices=PRIORITY_CHOICES)
         
-        
     def to_python(self):
         return serializers.serialize("python", [self])[0]
 

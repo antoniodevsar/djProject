@@ -190,8 +190,14 @@
 	<p class="my-task-row">
 		<a href="#" class="task_id {$task.status}"></a>
 		<span class="task_description">{$task.description}</span>
-		<span class="task_priority">{$task.priority}</span>
-	    {if $task.comments.length }
+		<span class="task_priority">{$task.priority}</span>	    
+		{if $task.estimated != null }
+			<span class="task_estimated">{$task.estimated}</span>
+		{/if}
+		{if $task.remaining != null }
+			<span class="task_remaining">{$task.remaining}</span>
+		{/if}		
+		{if $task.comments.length }
 			<span class="task_comments" title="{$task.comments.length}"></span>
 		{/if}
 	</p>	

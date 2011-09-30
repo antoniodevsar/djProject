@@ -337,7 +337,7 @@ a:hover.link_create, #projects-list a:hover{
 
 
 .my-task-row > .task_description{
-	color:black;	
+	color:black;		
 }
 
 .my-task-row{
@@ -345,6 +345,9 @@ a:hover.link_create, #projects-list a:hover{
 	border:solid 1px #EEE;
 	padding:2px;
 	cursor:pointer;
+	height:25px;
+	verical-align:middle;
+	line-height:25px;
 }
 
 

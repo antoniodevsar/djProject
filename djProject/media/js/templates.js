@@ -70,6 +70,6 @@ djProject.templates.myTasksTableHeader = function(opt_data, opt_sb) {
 
 djProject.templates.myTaskTemplate = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('\t<p class="my-task-row"><a href="#" class="task_id ', soy.$$escapeHtml(opt_data.task.status), '"></a><span class="task_description">', soy.$$escapeHtml(opt_data.task.description), '</span><span class="task_priority">', soy.$$escapeHtml(opt_data.task.priority), '</span>', (opt_data.task.comments.length) ? '<span class="task_comments" title="' + soy.$$escapeHtml(opt_data.task.comments.length) + '"></span>' : '', '</p>');
+  output.append('\t<p class="my-task-row"><a href="#" class="task_id ', soy.$$escapeHtml(opt_data.task.status), '"></a><span class="task_description">', soy.$$escapeHtml(opt_data.task.description), '</span><span class="task_priority">', soy.$$escapeHtml(opt_data.task.priority), '</span>', (opt_data.task.estimated != null) ? '<span class="task_estimated">' + soy.$$escapeHtml(opt_data.task.estimated) + '</span>' : '', (opt_data.task.remaining != null) ? '<span class="task_remaining">' + soy.$$escapeHtml(opt_data.task.remaining) + '</span>' : '', (opt_data.task.comments.length) ? '<span class="task_comments" title="' + soy.$$escapeHtml(opt_data.task.comments.length) + '"></span>' : '', '</p>');
   if (!opt_sb) return output.toString();
 };
